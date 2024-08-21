@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { DataViewTable } from "./DataViewTable";
 
 const DataView = () => {
   return (
@@ -9,6 +10,7 @@ const DataView = () => {
       >
         DataTable
       </Typography>
+      <DataViewTable />
     </Box>
   );
 };
