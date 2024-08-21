@@ -1,4 +1,11 @@
-import { Box, Button, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import {
   MRT_ColumnDef,
   MRT_GlobalFilterTextField,
@@ -9,6 +16,8 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DateTime } from "luxon";
 import { Cancel, Search, Share } from "@mui/icons-material";
+import { BarChart, axisClasses } from "@mui/x-charts";
+import { pivotChartData } from "../../utils/helpers";
 import useParsedCSVData from "../../utils/hooks/useParsedCSVData";
 
 export const PivotTable = () => {
@@ -324,6 +333,62 @@ export const PivotTable = () => {
       }}
     >
       <MaterialReactTable table={tableComponent} />
+      <Typography variant="h4" sx={{ textDecoration: "underline", mt: "1rem" }}>
+        Bar Chart
+      </Typography>
+
+      <BarChart
+        dataset={pivotChartData[grouping as string](dataItems)}
+        xAxis={[
+          {
+            scaleType: "band",
+            dataKey: grouping?.toLowerCase(),
+            label: grouping || "",
+            valueFormatter(value, context) {
+              return value.split(" ").slice(0, 2).join(" ");
+            },
+          },
+        ]}
+        yAxis={[{ label: "Count" }]}
+        series={Object.keys(
+          pivotChartData[grouping as string](dataItems)[0] || {}
+        )
+          .filter((key) => key !== grouping?.toLowerCase())
+          .map((key) => ({
+            dataKey: key,
+            label: "Companies count",
+          }))}
+        slotProps={{
+          legend: {
+            hidden: true,
+            labelStyle: {
+              fontSize: 12,
+              display: "none",
+            },
+          },
+        }}
+        sx={{
+          [`& .${axisClasses.left} .${axisClasses.label}`]: {
+            transform: "translateX(-10px)",
+          },
+        }}
+        leftAxis={{
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: "bold",
+          },
+          tickLabelStyle: {
+            fontSize: 12,
+          },
+        }}
+        bottomAxis={{
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: "bold",
+          },
+        }}
+        height={500}
+      />
     </Box>
   );
 };
