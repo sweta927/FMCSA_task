@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { PivotTable } from "./PivotTable";
 
 const PivotView = () => {
   return (
@@ -9,6 +10,7 @@ const PivotView = () => {
       >
         PivotTable
       </Typography>
+      <PivotTable />
     </Box>
   );
 };
