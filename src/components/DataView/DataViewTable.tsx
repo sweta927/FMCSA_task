@@ -16,6 +16,7 @@ import {
   collectEntityTypes,
   transformToFormattedData,
 } from "../../utils/helpers";
+import SaveModal from "../SaveModal";
 import useParsedCSVData from "../../utils/hooks/useParsedCSVData";
 
 export const DataViewTable = () => {
@@ -23,6 +24,7 @@ export const DataViewTable = () => {
     url: "DataFiles/FMSCA_records.csv",
   });
 
+  const [open, setOpen] = useState(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [filters, setFilters] = useState<any[]>(
     JSON.parse(localStorage.getItem("filters") || "[]")
@@ -31,6 +33,7 @@ export const DataViewTable = () => {
   useEffect(() => {
     const handleBeforeUnload = (event: any) => {
       event.preventDefault();
+      setOpen(true);
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -241,13 +244,25 @@ export const DataViewTable = () => {
 
   window.addEventListener("beforeunload", function (event) {
     event.preventDefault();
+    setOpen(true);
   });
 
   useEffect(() => {
     setRequiredData(
       tableComponent.getFilteredRowModel().rows.map((item) => item.original)
     );
+    handleSave();
     setFilters(tableComponent.getState().columnFilters);
+  }, [tableComponent.getFilteredRowModel().rows]);
+
+  const handleModal = () => {
+    setOpen(false);
+  };
+
+  const handleSave = useCallback(() => {
+    const filterArray = tableComponent.getState().columnFilters || [];
+    localStorage.setItem("filters", JSON.stringify(filterArray));
+    handleModal();
   }, [tableComponent.getFilteredRowModel().rows]);
 
   return (
@@ -298,6 +313,14 @@ export const DataViewTable = () => {
         }}
         height={500}
       />
+
+      {open && (
+        <SaveModal
+          handleAgree={handleSave}
+          handleClose={handleModal}
+          open={open}
+        />
+      )}
     </Box>
   );
 };

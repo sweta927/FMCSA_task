@@ -18,6 +18,7 @@ import { DateTime } from "luxon";
 import { Cancel, Search, Share } from "@mui/icons-material";
 import { BarChart, axisClasses } from "@mui/x-charts";
 import { pivotChartData } from "../../utils/helpers";
+import SaveModal from "../SaveModal";
 import useParsedCSVData from "../../utils/hooks/useParsedCSVData";
 
 export const PivotTable = () => {
@@ -25,6 +26,7 @@ export const PivotTable = () => {
     url: "DataFiles/FMSCA_records.csv",
   });
 
+  const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [grouping, setGrouping] = useState<null | string>("Month");
   const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -35,6 +37,7 @@ export const PivotTable = () => {
   useEffect(() => {
     const handleBeforeUnload = (event: any) => {
       event.preventDefault();
+      setOpen(true);
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -43,6 +46,10 @@ export const PivotTable = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
+
+  const handleModal = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -317,10 +324,18 @@ export const PivotTable = () => {
 
   window.addEventListener("beforeunload", function (event) {
     event.preventDefault();
+    setOpen(true);
   });
 
   useEffect(() => {
+    handleSave();
     setFilters(tableComponent.getState().columnFilters);
+  }, [tableComponent.getFilteredRowModel().rows]);
+
+  const handleSave = useCallback(() => {
+    const filterArray = tableComponent.getState().columnFilters || [];
+    localStorage.setItem("filters", JSON.stringify(filterArray));
+    handleModal();
   }, [tableComponent.getFilteredRowModel().rows]);
 
   return (
@@ -389,6 +404,14 @@ export const PivotTable = () => {
         }}
         height={500}
       />
+
+      {open && (
+        <SaveModal
+          handleAgree={handleSave}
+          handleClose={handleModal}
+          open={open}
+        />
+      )}
     </Box>
   );
 };
