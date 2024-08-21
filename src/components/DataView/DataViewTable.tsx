@@ -182,6 +182,10 @@ export const DataViewTable = () => {
       showProgressBars: loading,
       columnFilters: filters,
     },
+    enableCellActions: true,
+    enableEditing: true,
+    enableRowActions: true,
+    editDisplayMode: "cell",
     muiTableBodyRowProps: {
       sx: {
         fontSize: 14,
@@ -277,7 +281,6 @@ export const DataViewTable = () => {
 
   window.addEventListener("beforeunload", function (event) {
     event.preventDefault();
-
   });
 
   const handleReset = () => {

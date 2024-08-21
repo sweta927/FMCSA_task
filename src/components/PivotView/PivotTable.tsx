@@ -202,6 +202,10 @@ export const PivotTable = () => {
     enableGlobalFilter: false,
     enableColumnOrdering: true,
     enableColumnFilters: false,
+    enableCellActions: true,
+    enableEditing: true,
+    enableRowActions: true,
+    editDisplayMode: "cell",
     state: {
       showGlobalFilter: false,
       density: "compact",
