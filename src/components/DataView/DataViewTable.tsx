@@ -13,7 +13,7 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Cancel, Search, Share } from "@mui/icons-material";
 import { BarChart, axisClasses } from "@mui/x-charts";
 import { DateTime } from "luxon";
@@ -29,6 +29,8 @@ export const DataViewTable = () => {
   const { data, loading, columns } = useParsedCSVData({
     url: "DataFiles/FMSCA_records.csv",
   });
+
+  const isFirstRender = useRef(true);
 
   const [open, setOpen] = useState(false);
   const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -59,6 +61,34 @@ export const DataViewTable = () => {
       ""
     )}?${params.toString()}`;
     window.history.pushState({}, "", newUrl);
+  }, [filters]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    filters.forEach((filter) => {
+      params.append(filter.id, filter.value);
+    });
+
+    if (isFirstRender.current) {
+      const tableFiltersFromURL = [];
+      for (const [key, value] of new URL(window.location.href).searchParams) {
+        if (value) tableFiltersFromURL.push({ id: key, value });
+      }
+
+      if (tableFiltersFromURL.length > 0) {
+        setFilters(tableFiltersFromURL);
+      }
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    const newUrl = `${window.location.pathname.replace(/\/$/, "")}${
+      "?" + params.toString()
+    }`;
+    window.history.pushState({}, "", newUrl);
+    handleSave();
   }, [filters]);
 
   const column = useMemo(
@@ -247,7 +277,7 @@ export const DataViewTable = () => {
 
   window.addEventListener("beforeunload", function (event) {
     event.preventDefault();
-    setOpen(true);
+
   });
 
   const handleReset = () => {

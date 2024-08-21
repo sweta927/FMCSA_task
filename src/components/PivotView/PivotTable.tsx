@@ -329,7 +329,6 @@ export const PivotTable = () => {
 
   window.addEventListener("beforeunload", function (event) {
     event.preventDefault();
-    setOpen(true);
   });
 
   useEffect(() => {
