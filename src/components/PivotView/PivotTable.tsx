@@ -19,8 +19,8 @@ import { DateTime } from "luxon";
 import { Cancel, Search, Share } from "@mui/icons-material";
 import { BarChart, axisClasses } from "@mui/x-charts";
 import { pivotChartData } from "../../utils/helpers";
-import SaveModal from "../SaveModal";
 import useParsedCSVData from "../../utils/hooks/useParsedCSVData";
+import ResetModal from "../ResetModal";
 
 export const PivotTable = () => {
   const { data, loading, columns } = useParsedCSVData({
@@ -38,7 +38,6 @@ export const PivotTable = () => {
   useEffect(() => {
     const handleBeforeUnload = (event: any) => {
       event.preventDefault();
-      setOpen(true);
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -186,6 +185,12 @@ export const PivotTable = () => {
     handleClose();
   };
 
+  const handleReset = () => {
+    localStorage.removeItem("filters");
+    setFilters([]);
+    setOpen(false);
+  };
+
   const tableComponent = useMaterialReactTable({
     columns: column,
     data: dataItems,
@@ -239,8 +244,7 @@ export const PivotTable = () => {
                 aria-controls="date-reset-btn"
                 aria-haspopup="true"
                 onClick={() => {
-                  localStorage.removeItem("filters");
-                  setFilters([]);
+                  setOpen(true);
                 }}
                 variant="contained"
                 sx={{ textTransform: "unset" }}
@@ -414,8 +418,8 @@ export const PivotTable = () => {
           />
 
           {open && (
-            <SaveModal
-              handleAgree={handleSave}
+            <ResetModal
+              handleAgree={handleReset}
               handleClose={handleModal}
               open={open}
             />

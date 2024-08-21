@@ -11,7 +11,7 @@ interface SaveModalProps {
   open: boolean;
 }
 
-const SaveModal = ({ handleClose, handleAgree, open }: SaveModalProps) => {
+const ResetModal = ({ handleClose, handleAgree, open }: SaveModalProps) => {
   return (
     <Dialog
       open={open}
@@ -19,10 +19,10 @@ const SaveModal = ({ handleClose, handleAgree, open }: SaveModalProps) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Save Filters</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Reset Filters</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Do you want to save your table state?
+          Do you want to Reset Table Filters?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -35,4 +35,4 @@ const SaveModal = ({ handleClose, handleAgree, open }: SaveModalProps) => {
   );
 };
 
-export default SaveModal;
+export default ResetModal;

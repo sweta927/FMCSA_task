@@ -22,8 +22,8 @@ import {
   collectEntityTypes,
   transformToFormattedData,
 } from "../../utils/helpers";
-import SaveModal from "../SaveModal";
 import useParsedCSVData from "../../utils/hooks/useParsedCSVData";
+import ResetModal from "../ResetModal";
 
 export const DataViewTable = () => {
   const { data, loading, columns } = useParsedCSVData({
@@ -39,7 +39,6 @@ export const DataViewTable = () => {
   useEffect(() => {
     const handleBeforeUnload = (event: any) => {
       event.preventDefault();
-      setOpen(true);
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -187,8 +186,7 @@ export const DataViewTable = () => {
                 aria-controls="date-reset-btn"
                 aria-haspopup="true"
                 onClick={() => {
-                  localStorage.removeItem("filters");
-                  setFilters([]);
+                  setOpen(true);
                 }}
                 variant="contained"
                 sx={{ textTransform: "unset" }}
@@ -251,6 +249,12 @@ export const DataViewTable = () => {
     event.preventDefault();
     setOpen(true);
   });
+
+  const handleReset = () => {
+    localStorage.removeItem("filters");
+    setFilters([]);
+    setOpen(false);
+  };
 
   useEffect(() => {
     setRequiredData(
@@ -327,8 +331,8 @@ export const DataViewTable = () => {
           />
 
           {open && (
-            <SaveModal
-              handleAgree={handleSave}
+            <ResetModal
+              handleAgree={handleReset}
               handleClose={handleModal}
               open={open}
             />
