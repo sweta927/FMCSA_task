@@ -193,7 +193,7 @@ export const PivotTable = () => {
     enableColumnResizing: true,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
-    enableColumnDragging: false,
+    enableColumnDragging: true,
     enableGlobalFilter: false,
     enableColumnOrdering: true,
     enableColumnFilters: false,

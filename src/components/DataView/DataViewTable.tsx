@@ -1,4 +1,10 @@
-import { Box, Button, CircularProgress, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Typography,
+} from "@mui/material";
 
 import {
   MRT_ColumnDef,
@@ -133,10 +139,9 @@ export const DataViewTable = () => {
     data: dataItems,
     enableGrouping: false,
     enableColumnResizing: true,
-
     enableDensityToggle: false,
     enableFullScreenToggle: false,
-    enableColumnDragging: false,
+    enableColumnDragging: true,
     enableGlobalFilter: true,
     enableColumnOrdering: true,
     enableColumnFilters: true,
