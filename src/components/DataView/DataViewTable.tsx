@@ -1,4 +1,4 @@
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 
 import {
   MRT_ColumnDef,
@@ -7,10 +7,15 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Cancel, Search, Share } from "@mui/icons-material";
+import { BarChart, axisClasses } from "@mui/x-charts";
 import { DateTime } from "luxon";
-
+import {
+  dataSummarize,
+  collectEntityTypes,
+  transformToFormattedData,
+} from "../../utils/helpers";
 import useParsedCSVData from "../../utils/hooks/useParsedCSVData";
 
 export const DataViewTable = () => {
@@ -221,11 +226,27 @@ export const DataViewTable = () => {
     autoResetAll: true,
   });
 
+  const [requiredData, setRequiredData] = useState(
+    tableComponent.getFilteredRowModel().rows.map((item) => item.original)
+  );
+
+  const entyChartData = useMemo(
+    () =>
+      transformToFormattedData(
+        dataSummarize(requiredData),
+        collectEntityTypes(requiredData)
+      ),
+    [requiredData]
+  );
+
   window.addEventListener("beforeunload", function (event) {
     event.preventDefault();
   });
 
   useEffect(() => {
+    setRequiredData(
+      tableComponent.getFilteredRowModel().rows.map((item) => item.original)
+    );
     setFilters(tableComponent.getState().columnFilters);
   }, [tableComponent.getFilteredRowModel().rows]);
 
@@ -239,6 +260,44 @@ export const DataViewTable = () => {
       }}
     >
       <MaterialReactTable table={tableComponent} />
+      <Typography variant="h4" sx={{ textDecoration: "underline", mt: "1rem" }}>
+        Bar Chart
+      </Typography>
+
+      <BarChart
+        dataset={entyChartData}
+        xAxis={[{ scaleType: "band", dataKey: "month", label: "Month" }]}
+        yAxis={[{ label: "Count" }]}
+        series={Object.keys(entyChartData[0] || {})
+          .filter((key) => key !== "month")
+          .map((key) => ({
+            dataKey: key,
+            label: key,
+          }))}
+        slotProps={{
+          legend: {
+            hidden: true,
+            labelStyle: {
+              fontSize: 12,
+              display: "none",
+            },
+          },
+        }}
+        leftAxis={{
+          labelStyle: {
+            fontSize: 14,
+          },
+          tickLabelStyle: {
+            fontSize: 12,
+          },
+        }}
+        sx={{
+          [`& .${axisClasses.left} .${axisClasses.label}`]: {
+            transform: "translateX(-10px)",
+          },
+        }}
+        height={500}
+      />
     </Box>
   );
 };
