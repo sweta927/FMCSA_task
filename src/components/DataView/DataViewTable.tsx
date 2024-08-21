@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton, Typography } from "@mui/material";
 
 import {
   MRT_ColumnDef,
@@ -274,52 +274,61 @@ export const DataViewTable = () => {
         textAlign: "center",
       }}
     >
-      <MaterialReactTable table={tableComponent} />
-      <Typography variant="h4" sx={{ textDecoration: "underline", mt: "1rem" }}>
-        Bar Chart
-      </Typography>
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <MaterialReactTable table={tableComponent} />
+          <Typography
+            variant="h4"
+            sx={{ textDecoration: "underline", mt: "1rem" }}
+          >
+            Bar Chart
+          </Typography>
 
-      <BarChart
-        dataset={entyChartData}
-        xAxis={[{ scaleType: "band", dataKey: "month", label: "Month" }]}
-        yAxis={[{ label: "Count" }]}
-        series={Object.keys(entyChartData[0] || {})
-          .filter((key) => key !== "month")
-          .map((key) => ({
-            dataKey: key,
-            label: key,
-          }))}
-        slotProps={{
-          legend: {
-            hidden: true,
-            labelStyle: {
-              fontSize: 12,
-              display: "none",
-            },
-          },
-        }}
-        leftAxis={{
-          labelStyle: {
-            fontSize: 14,
-          },
-          tickLabelStyle: {
-            fontSize: 12,
-          },
-        }}
-        sx={{
-          [`& .${axisClasses.left} .${axisClasses.label}`]: {
-            transform: "translateX(-10px)",
-          },
-        }}
-        height={500}
-      />
+          <BarChart
+            dataset={entyChartData}
+            xAxis={[{ scaleType: "band", dataKey: "month", label: "Month" }]}
+            yAxis={[{ label: "Count" }]}
+            series={Object.keys(entyChartData[0] || {})
+              .filter((key) => key !== "month")
+              .map((key) => ({
+                dataKey: key,
+                label: key,
+              }))}
+            slotProps={{
+              legend: {
+                hidden: true,
+                labelStyle: {
+                  fontSize: 12,
+                  display: "none",
+                },
+              },
+            }}
+            leftAxis={{
+              labelStyle: {
+                fontSize: 14,
+              },
+              tickLabelStyle: {
+                fontSize: 12,
+              },
+            }}
+            sx={{
+              [`& .${axisClasses.left} .${axisClasses.label}`]: {
+                transform: "translateX(-10px)",
+              },
+            }}
+            height={500}
+          />
 
-      {open && (
-        <SaveModal
-          handleAgree={handleSave}
-          handleClose={handleModal}
-          open={open}
-        />
+          {open && (
+            <SaveModal
+              handleAgree={handleSave}
+              handleClose={handleModal}
+              open={open}
+            />
+          )}
+        </>
       )}
     </Box>
   );
