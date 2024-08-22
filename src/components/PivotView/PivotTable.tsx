@@ -24,7 +24,7 @@ import ResetModal from "../ResetModal";
 
 export const PivotTable = () => {
   const { data, loading, columns } = useParsedCSVData({
-    url: "DataFiles/FMSCA_records.csv",
+    url: "DataFiles/All_FMSCA_records.csv",
   });
 
   const [open, setOpen] = useState(false);

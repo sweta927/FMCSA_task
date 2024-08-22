@@ -42,7 +42,7 @@ export const transformToFormattedData = (
     const entry: any = { month };
 
     allType.forEach((type) => {
-      entry[type] = counts[type] || 0;
+      if (type) entry[type] = counts[type] || 0;
     });
 
     return entry;

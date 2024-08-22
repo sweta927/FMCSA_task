@@ -27,7 +27,7 @@ import ResetModal from "../ResetModal";
 
 export const DataViewTable = () => {
   const { data, loading, columns } = useParsedCSVData({
-    url: "DataFiles/FMSCA_records.csv",
+    url: "DataFiles/All_FMSCA_records.csv",
   });
 
   const isFirstRender = useRef(true);
